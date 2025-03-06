@@ -1,10 +1,11 @@
 {
     "urls": [
-      ["hid_services/joystick.py", "github:pruebadehack/hid_services/hid_services/joystick.py"],
-      ["hid_services/keyboard.py", "github:pruebadehack/hid_services/hid_services/keyboard.py"],
-      ["hid_services/mouse.py", "github:pruebadehack/hid_services/hid_services/mouse.py"],
-      ["advertiser.py", "github:pruebadehack/hid_services/advertiser.py"],
-      ["hid_services.py", "github:pruebadehack/hid_services/hid_services.py"]
+        ["hid_services/constants.py", "github:pruebadehack/hid_services/hidservices/constants.py"],
+        ["hid_services/joystick.py", "github:pruebadehack/hid_services/hidservices/joystick.py"],
+        ["hid_services/keyboard.py", "github:pruebadehack/hid_services/hidservices/keyboard.py"],
+        ["hid_services/mouse.py", "github:pruebadehack/hid_services/hidservices/mouse.py"],
+        ["advertiser.py", "github:pruebadehack/hid_services/advertiser.py"],
+        ["hid_services.py", "github:pruebadehack/hid_services/hid_services.py"]
     ],
     "version": "1.0"
   }
