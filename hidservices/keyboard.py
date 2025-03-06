@@ -1,7 +1,8 @@
 from bluetooth import UUID
 from lib.hid_services import HumanInterfaceDevice
 from lib.hidservices.advertiser import Advertiser
-from lib.hidservices.constants
+from lib.hidservices.constants import Constants
+import struct
 
 # Class that represents the Keyboard service.
 class Keyboard(HumanInterfaceDevice):
@@ -12,16 +13,16 @@ class Keyboard(HumanInterfaceDevice):
         self.HIDS = (                                                                                                   # Service description: describes the service and how we communicate.
             UUID(0x1812),                                                                                               # Human Interface Device.
             (
-                (UUID(0x2A4A), F_READ),                                                                                 # 0x2A4A = HID information, to be read by client.
-                (UUID(0x2A4B), F_READ),                                                                                 # 0x2A4B = HID report map, to be read by client.
-                (UUID(0x2A4C), F_READ_WRITE_NORESPONSE),                                                                # 0x2A4C = HID control point, to be written by client.
-                (UUID(0x2A4D), F_READ_NOTIFY, (                                                                         # 0x2A4D = HID report, to be read by client after notification.
-                    (UUID(0x2908), DSC_F_READ),                                                                         # 0x2908 = HID reference, to be read by client.
+                (UUID(0x2A4A), Constants.F_READ),                                                                                 # 0x2A4A = HID information, to be read by client.
+                (UUID(0x2A4B), Constants.F_READ),                                                                                 # 0x2A4B = HID report map, to be read by client.
+                (UUID(0x2A4C), Constants.F_READ_WRITE_NORESPONSE),                                                                # 0x2A4C = HID control point, to be written by client.
+                (UUID(0x2A4D), Constants.F_READ_NOTIFY, (                                                                         # 0x2A4D = HID report, to be read by client after notification.
+                    (UUID(0x2908), Constants.DSC_F_READ),                                                                         # 0x2908 = HID reference, to be read by client.
                 )),
-                (UUID(0x2A4D), F_READ_WRITE, (                                                                          # 0x2A4D = HID report
-                    (UUID(0x2908), DSC_F_READ),                                                                         # 0x2908 = HID reference, to be read by client.
+                (UUID(0x2A4D), Constants.F_READ_WRITE, (                                                                          # 0x2A4D = HID report
+                    (UUID(0x2908), Constants.DSC_F_READ),                                                                         # 0x2908 = HID reference, to be read by client.
                 )),
-                (UUID(0x2A4E), F_READ_WRITE_NORESPONSE),                                                                # 0x2A4E = HID protocol mode, to be written & read by client.
+                (UUID(0x2A4E), Constants.F_READ_WRITE_NORESPONSE),                                                                # 0x2A4E = HID protocol mode, to be written & read by client.
             ),
         )
 
@@ -74,7 +75,7 @@ class Keyboard(HumanInterfaceDevice):
     # Interrupt request callback function
     # Overwrite super to catch keyboard report write events by the central.
     def ble_irq(self, event, data):
-        if event == _IRQ_GATTS_WRITE:                                                                                   # If a client has written to a characteristic or descriptor.
+        if event == Constants.IRQ_GATTS_WRITE:                                                                                   # If a client has written to a characteristic or descriptor.
             conn_handle, attr_handle = data                                                                             # Get the handle to the characteristic that was written.
             if attr_handle == self.h_repout:
                 print("Keyboard changed by Central")
@@ -82,7 +83,7 @@ class Keyboard(HumanInterfaceDevice):
                 bytes = struct.unpack("B", report)                                                                      # Unpack the report.
                 if self.kb_callback is not None:                                                                        # Call the callback function.
                     self.kb_callback(bytes)
-                return _GATTS_NO_ERROR
+                return Constants.GATTS_NO_ERROR
 
         return super(Keyboard, self).ble_irq(event, data)                                                               # Let super handle the event.
 

@@ -1,6 +1,8 @@
 from micropython import const
 from bluetooth import UUID
-from lib.hidservices.constants
+from lib.hidservices.constants import Constants
+import bluetooth
+import struct
 
 class Advertiser:
 
@@ -13,26 +15,26 @@ class Advertiser:
             payload += struct.pack("BB", len(value) + 1, adv_type) + value
 
         _append(
-            _ADV_TYPE_FLAGS,
+            Constants.ADV_TYPE_FLAGS,
             struct.pack("B", (0x01 if limited_disc else 0x02) + (0x18 if br_edr else 0x04)),
         )
 
         if name:
-            _append(_ADV_TYPE_NAME, name)
+            _append(Constants.ADV_TYPE_NAME, name)
 
         if services:
             for uuid in services:
                 b = bytes(uuid)
                 if len(b) == 2:
-                    _append(_ADV_TYPE_UUID16_COMPLETE, b)
+                    _append(Constants.ADV_TYPE_UUID16_COMPLETE, b)
                 elif len(b) == 4:
-                    _append(_ADV_TYPE_UUID32_COMPLETE, b)
+                    _append(Constants.ADV_TYPE_UUID32_COMPLETE, b)
                 elif len(b) == 16:
-                    _append(_ADV_TYPE_UUID128_COMPLETE, b)
+                    _append(Constants.ADV_TYPE_UUID128_COMPLETE, b)
 
         # See org.bluetooth.characteristic.gap.appearance.xml
         if appearance:
-            _append(_ADV_TYPE_APPEARANCE, struct.pack("<h", appearance))
+            _append(Constants.ADV_TYPE_APPEARANCE, struct.pack("<h", appearance))
 
         return payload
 
@@ -48,17 +50,17 @@ class Advertiser:
 
 
     def decode_name(self, payload):
-        n = self.decode_field(payload, _ADV_TYPE_NAME)
+        n = self.decode_field(payload, Constants.ADV_TYPE_NAME)
         return str(n[0], "utf-8") if n else ""
 
 
     def decode_services(self, payload):
         services = []
-        for u in self.decode_field(payload, _ADV_TYPE_UUID16_COMPLETE):
+        for u in self.decode_field(payload, Constants.ADV_TYPE_UUID16_COMPLETE):
             services.append(bluetooth.UUID(struct.unpack("<h", u)[0]))
-        for u in self.decode_field(payload, _ADV_TYPE_UUID32_COMPLETE):
+        for u in self.decode_field(payload, Constants.ADV_TYPE_UUID32_COMPLETE):
             services.append(bluetooth.UUID(struct.unpack("<d", u)[0]))
-        for u in self.decode_field(payload, _ADV_TYPE_UUID128_COMPLETE):
+        for u in self.decode_field(payload, Constants.ADV_TYPE_UUID128_COMPLETE):
             services.append(bluetooth.UUID(u))
         return services
 
@@ -81,3 +83,4 @@ class Advertiser:
         if self.advertising:
             self._ble.gap_advertise(0, adv_data=self._payload)
             print("Stopped advertising")
+

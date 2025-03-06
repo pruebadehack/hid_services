@@ -21,7 +21,7 @@ import bluetooth
 import json
 import binascii
 from bluetooth import UUID
-from lib.hidservices.constants
+from lib.hidservices.constants import Constants
 
 # Class that represents a general HID device services.
 class HumanInterfaceDevice(object):
@@ -37,7 +37,7 @@ class HumanInterfaceDevice(object):
         self.device_state = HumanInterfaceDevice.DEVICE_STOPPED                                                         # The initial device state.
         self.conn_handle = None                                                                                         # The handle of the connected client. HID devices can only have a single connection.
         self.state_change_callback = None                                                                               # The user defined callback function which gets called when the device state changes.
-        self.io_capability = _IO_CAPABILITY_NO_INPUT_OUTPUT                                                             # The IO capability of the device. This is used to allow for different ways of identification during pairing.
+        self.io_capability = Constants.IO_CAPABILITY_NO_INPUT_OUTPUT                                                             # The IO capability of the device. This is used to allow for different ways of identification during pairing.
         self.bond = True                                                                                                # Do we wish to bond with connecting clients? Normally True. Not supported by older Micropython versions.
         self.le_secure = True                                                                                           # Do we wish to use a secure connection? Normally True. Not supported by older Micropython versions.
 
@@ -77,21 +77,21 @@ class HumanInterfaceDevice(object):
         self.DIS = (                                                                                                    # Device Information Service (DIS) description.
             UUID(0x180A),                                                                                               # 0x180A = Device Information.
             (
-                (UUID(0x2A24), F_READ),                                                                                 # 0x2A24 = Model number string, to be read by client.
-                (UUID(0x2A25), F_READ),                                                                                 # 0x2A25 = Serial number string, to be read by client.
-                (UUID(0x2A26), F_READ),                                                                                 # 0x2A26 = Firmware revision string, to be read by client.
-                (UUID(0x2A27), F_READ),                                                                                 # 0x2A27 = Hardware revision string, to be read by client.
-                (UUID(0x2A28), F_READ),                                                                                 # 0x2A28 = Software revision string, to be read by client.
-                (UUID(0x2A29), F_READ),                                                                                 # 0x2A29 = Manufacturer name string, to be read by client.
-                (UUID(0x2A50), F_READ),                                                                                 # 0x2A50 = PnP ID, to be read by client.
+                (UUID(0x2A24), Constants.F_READ),                                                                                 # 0x2A24 = Model number string, to be read by client.
+                (UUID(0x2A25), Constants.F_READ),                                                                                 # 0x2A25 = Serial number string, to be read by client.
+                (UUID(0x2A26), Constants.F_READ),                                                                                 # 0x2A26 = Firmware revision string, to be read by client.
+                (UUID(0x2A27), Constants.F_READ),                                                                                 # 0x2A27 = Hardware revision string, to be read by client.
+                (UUID(0x2A28), Constants.F_READ),                                                                                 # 0x2A28 = Software revision string, to be read by client.
+                (UUID(0x2A29), Constants.F_READ),                                                                                 # 0x2A29 = Manufacturer name string, to be read by client.
+                (UUID(0x2A50), Constants.F_READ),                                                                                 # 0x2A50 = PnP ID, to be read by client.
             ),
         )
 
         self.BAS = (                                                                                                    # Battery Service (BAS) description.
             UUID(0x180F),                                                                                               # 0x180F = Battery Information.
             (
-                (UUID(0x2A19), F_READ_NOTIFY, (                                                                         # 0x2A19 = Battery level, to be read by client after being notified of change.
-                    (UUID(0x2904), DSC_F_READ),                                                                         # 0x2904 = Characteristic Presentation Format.
+                (UUID(0x2A19), Constants.F_READ_NOTIFY, (                                                                         # 0x2A19 = Battery level, to be read by client after being notified of change.
+                    (UUID(0x2904), Constants.DSC_F_READ),                                                                         # 0x2904 = Characteristic Presentation Format.
                 )),
             ),
         )
@@ -99,12 +99,12 @@ class HumanInterfaceDevice(object):
         self.DID = (                                                                                                    # Device Identification Profile (DID) description.
             UUID(0x1200),                                                                                               # 0x1200 = PnPInformation.
             (
-                (UUID(0x0200), F_READ),                                                                                 # 0x0200 = SpecificationID.
-                (UUID(0x0201), F_READ),                                                                                 # 0x0201 = VendorID.
-                (UUID(0x0202), F_READ),                                                                                 # 0x0202 = ProductID.
-                (UUID(0x0203), F_READ),                                                                                 # 0x0203 = Version.
-                (UUID(0x0204), F_READ),                                                                                 # 0x0204 = PrimaryRecord.
-                (UUID(0x0205), F_READ),                                                                                 # 0x0205 = VendorIDSource.
+                (UUID(0x0200), Constants.F_READ),                                                                                 # 0x0200 = SpecificationID.
+                (UUID(0x0201), Constants.F_READ),                                                                                 # 0x0201 = VendorID.
+                (UUID(0x0202), Constants.F_READ),                                                                                 # 0x0202 = ProductID.
+                (UUID(0x0203), Constants.F_READ),                                                                                 # 0x0203 = Version.
+                (UUID(0x0204), Constants.F_READ),                                                                                 # 0x0204 = PrimaryRecord.
+                (UUID(0x0205), Constants.F_READ),                                                                                 # 0x0205 = VendorIDSource.
             ),
         )
 
@@ -118,11 +118,11 @@ class HumanInterfaceDevice(object):
 
     # Interrupt request callback function.
     def ble_irq(self, event, data):
-        if event == _IRQ_CENTRAL_CONNECT:                                                                               # Central connected.
+        if event == Constants.IRQ_CENTRAL_CONNECT:                                                                               # Central connected.
             self.conn_handle, _, _ = data                                                                               # Save the handle. HIDS specification only allow one central to be connected.
             self.set_state(HumanInterfaceDevice.DEVICE_CONNECTED)                                                       # Set the device state to connected.
             print("Central connected:", self.conn_handle)
-        elif event == _IRQ_CENTRAL_DISCONNECT:                                                                          # Central disconnected.
+        elif event == Constants.IRQ_CENTRAL_DISCONNECT:                                                                          # Central disconnected.
             conn_handle, addr_type, addr = data
             self.conn_handle = None                                                                                     # Discard old handle.
             self.set_state(HumanInterfaceDevice.DEVICE_IDLE)
@@ -130,59 +130,59 @@ class HumanInterfaceDevice(object):
             self.authenticated = False
             self.bonded = False
             print("Central disconnected:", conn_handle)
-        elif event == _IRQ_GATTS_WRITE:                                                                                 # Write operation from client.
+        elif event == Constants.IRQ_GATTS_WRITE:                                                                                 # Write operation from client.
             conn_handle, attr_handle = data
             value = self._ble.gatts_read(attr_handle)
             description, _val = self.characteristics.get(attr_handle, (None, None))
             if description is None:
                 print("Client initiated write on unknown handle:", attr_handle, "with value", value)
-                return _GATTS_ERROR_ATTR_NOT_FOUND
+                return Constants.GATTS_ERROR_ATTR_NOT_FOUND
             else:
                 self.characteristics[attr_handle] = (description, value)
                 print("Client initiated write on", description, "with value", value)
-                return _GATTS_NO_ERROR
-        elif event == _IRQ_GATTS_READ_REQUEST:                                                                          # Read request from client.
+                return Constants.GATTS_NO_ERROR
+        elif event == Constants.IRQ_GATTS_READ_REQUEST:                                                                          # Read request from client.
             conn_handle, attr_handle = data
             description, val = self.characteristics.get(attr_handle, (None, None))
             print("Read request:", description if description else attr_handle, "with value" if val else "", val if val else "")
             if conn_handle != self.conn_handle:                                                                         # If different connection, return no permission.
-                return _GATTS_ERROR_READ_NOT_PERMITTED
+                return Constants.GATTS_ERROR_READ_NOT_PERMITTED
             elif description == None:                                                                                   # If the handle is unknown, return invalid handle.
-                return _GATTS_ERROR_INVALID_HANDLE
+                return Constants.GATTS_ERROR_INVALID_HANDLE
             elif self.bond and not self.bonded:                                                                         # If we wish to bond but are not bonded, return insufficient authorization.
-                return _GATTS_ERROR_INSUFFICIENT_AUTHORIZATION
-            elif self.io_capability > _IO_CAPABILITY_NO_INPUT_OUTPUT and not self.authenticated:                        # If we can authenticate but the client hasn't authenticated, return insufficient authentication.
-                return _GATTS_ERROR_INSUFFICIENT_AUTHENTICATION
+                return Constants.GATTS_ERROR_INSUFFICIENT_AUTHORIZATION
+            elif self.io_capability > Constants.IO_CAPABILITY_NO_INPUT_OUTPUT and not self.authenticated:                        # If we can authenticate but the client hasn't authenticated, return insufficient authentication.
+                return Constants.GATTS_ERROR_INSUFFICIENT_AUTHENTICATION
             elif self.le_secure and (not self.encrypted or self.key_size < 16):                                         # If we wish for a secure connection but it is unencrypted or not strong enough, return insufficient encryption.
-                return _GATTS_ERROR_INSUFFICIENT_ENCRYPTION
+                return Constants.GATTS_ERROR_INSUFFICIENT_ENCRYPTION
             else:                                                                                                       # Otherwise, return no error.
-                return _GATTS_NO_ERROR
-        elif event == _IRQ_GATTS_INDICATE_DONE:                                                                         # A sent indication was done. (We don't use indications currently. If needed, define a callback function and override this function.)
+                return Constants.GATTS_NO_ERROR
+        elif event == Constants.IRQ_GATTS_INDICATE_DONE:                                                                         # A sent indication was done. (We don't use indications currently. If needed, define a callback function and override this function.)
             conn_handle, value_handle, status = data
             print("Indicate done:", data)
-        elif event == _IRQ_MTU_EXCHANGED:                                                                               # MTU was exchanged, set it.
+        elif event == Constants.IRQ_MTU_EXCHANGED:                                                                               # MTU was exchanged, set it.
             conn_handle, mtu = data
             self._ble.config(mtu=mtu)
             print("MTU exchanged:", mtu)
-        elif event == _IRQ_CONNECTION_UPDATE:                                                                           # Connection parameters were updated.
+        elif event == Constants.IRQ_CONNECTION_UPDATE:                                                                           # Connection parameters were updated.
             self.conn_handle, conn_interval, conn_latency, supervision_timeout, status = data                           # The new parameters.
             print("Connection update. Interval=", conn_interval, "latency=", conn_latency, "timeout=", supervision_timeout, "status=", status)
             return None                                                                                                 # Return an empty packet.
-        elif event == _IRQ_ENCRYPTION_UPDATE:                                                                           # Encryption was updated.
+        elif event == Constants.IRQ_ENCRYPTION_UPDATE:                                                                           # Encryption was updated.
             conn_handle, self.encrypted, self.authenticated, self.bonded, self.key_size = data                          # Update the values.
             print("Encryption update:", conn_handle, self.encrypted, self.authenticated, self.bonded, self.key_size)
-        elif event == _IRQ_PASSKEY_ACTION:                                                                              # Passkey actions: accept connection or show/enter passkey.
+        elif event == Constants.IRQ_PASSKEY_ACTION:                                                                              # Passkey actions: accept connection or show/enter passkey.
             conn_handle, action, passkey = data
             print("Passkey action:", conn_handle, action, passkey)
-            if action == _PASSKEY_ACTION_NUMCMP:                                                                        # Do we accept this connection?
+            if action == Constants.PASSKEY_ACTION_NUMCMP:                                                                        # Do we accept this connection?
                 accept = False
                 if self.passkey_callback is not None:                                                                   # Is callback function set?
                     accept = self.passkey_callback()                                                                    # Call callback for input.
                 self._ble.gap_passkey(conn_handle, action, accept)
-            elif action == _PASSKEY_ACTION_DISP:                                                                        # Show our passkey.
+            elif action == Constants.PASSKEY_ACTION_DISP:                                                                        # Show our passkey.
                 print("Displaying passkey")
                 self._ble.gap_passkey(conn_handle, action, self.passkey)
-            elif action == _PASSKEY_ACTION_INPUT:                                                                       # Enter passkey.
+            elif action == Constants.PASSKEY_ACTION_INPUT:                                                                       # Enter passkey.
                 print("Prompting for passkey")
                 pk = None
                 if self.passkey_callback is not None:                                                                   # Is callback function set?
@@ -190,7 +190,7 @@ class HumanInterfaceDevice(object):
                 self._ble.gap_passkey(conn_handle, action, pk)
             else:
                 print("Unknown passkey action")
-        elif event == _IRQ_SET_SECRET:                                                                                  # Set secret for bonding.
+        elif event == Constants.IRQ_SET_SECRET:                                                                                  # Set secret for bonding.
             sec_type, key, value = data
             key = (sec_type, bytes(key))
             value = bytes(value) if value else None
@@ -208,7 +208,7 @@ class HumanInterfaceDevice(object):
                 self.save_secrets()
                 print("Saving secret:", key, value)
             return True
-        elif event == _IRQ_GET_SECRET:                                                                                  # Get secret for bonding
+        elif event == Constants.IRQ_GET_SECRET:                                                                                  # Get secret for bonding
             sec_type, index, key = data
             _key = (sec_type, bytes(key) if key else None)
             value = None

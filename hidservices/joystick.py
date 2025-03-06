@@ -1,7 +1,8 @@
 from bluetooth import UUID
 from lib.hid_services import HumanInterfaceDevice
 from lib.hidservices.advertiser import Advertiser
-from lib.hidservices.constants
+from lib.hidservices.constants import Constants
+import struct
 
 # Class that represents the Joystick service.
 class Joystick(HumanInterfaceDevice):
@@ -12,13 +13,13 @@ class Joystick(HumanInterfaceDevice):
         self.HIDS = (                                                                                                   # HID service description: describes the service and how we communicate.
             UUID(0x1812),                                                                                               # 0x1812 = Human Interface Device.
             (
-                (UUID(0x2A4A), F_READ),                                                                                 # 0x2A4A = HID information characteristic, to be read by client.
-                (UUID(0x2A4B), F_READ),                                                                                 # 0x2A4B = HID USB report map, to be read by client.
-                (UUID(0x2A4C), F_READ_WRITE_NORESPONSE),                                                                # 0x2A4C = HID control point, to be written by client.
-                (UUID(0x2A4D), F_READ_NOTIFY, (                                                                         # 0x2A4D = HID report, to be read by client after notification.
-                    (UUID(0x2908), DSC_F_READ),                                                                         # 0x2908 = HID reference, to be read by client.
+                (UUID(0x2A4A), Constants.F_READ),                                                                                 # 0x2A4A = HID information characteristic, to be read by client.
+                (UUID(0x2A4B), Constants.F_READ),                                                                                 # 0x2A4B = HID USB report map, to be read by client.
+                (UUID(0x2A4C), Constants.F_READ_WRITE_NORESPONSE),                                                                # 0x2A4C = HID control point, to be written by client.
+                (UUID(0x2A4D), Constants.F_READ_NOTIFY, (                                                                         # 0x2A4D = HID report, to be read by client after notification.
+                    (UUID(0x2908), Constants.DSC_F_READ),                                                                         # 0x2908 = HID reference, to be read by client.
                 )),
-                (UUID(0x2A4E), F_READ_WRITE_NORESPONSE),                                                                # 0x2A4E = HID protocol mode, to be written & read by client.
+                (UUID(0x2A4E), Constants.F_READ_WRITE_NORESPONSE),                                                                # 0x2A4E = HID protocol mode, to be written & read by client.
             ),
         )
 
