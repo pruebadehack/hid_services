@@ -1,6 +1,6 @@
 from bluetooth import UUID
 from lib.hid_services import HumanInterfaceDevice
-from lib.advertiser import Advertiser
+from lib.hidservices.advertiser import Advertiser
 from lib.hidservices.constants
 
 
