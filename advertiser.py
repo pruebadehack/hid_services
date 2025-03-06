@@ -1,3 +1,7 @@
+from micropython import const
+from bluetooth import UUID
+from lib.hidservices.constants
+
 class Advertiser:
 
     # Generate a payload to be passed to gap_advertise(adv_data=...).

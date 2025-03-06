@@ -1,5 +1,7 @@
-from hid_services import HumanInterfaceDevice
-from advertiser import Advertiser
+from bluetooth import UUID
+from lib.hid_services import HumanInterfaceDevice
+from lib.advertiser import Advertiser
+from lib.hidservices.constants
 
 # Class that represents the Joystick service.
 class Joystick(HumanInterfaceDevice):
