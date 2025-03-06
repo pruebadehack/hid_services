@@ -1,0 +1,10 @@
+{
+    "urls": [
+      ["hid_services/joystick.py", "github:pruebadehack/hid_services/hid_services/joystick.py"],
+      ["hid_services/keyboard.py", "github:pruebadehack/hid_services/hid_services/keyboard.py"],
+      ["hid_services/mouse.py", "github:pruebadehack/hid_services/hid_services/mouse.py"],
+      ["advertiser.py", "github:pruebadehack/hid_services/advertiser.py"],
+      ["hid_services.py", "github:pruebadehack/hid_services/hid_services.py"]
+    ],
+    "version": "1.0"
+  }
