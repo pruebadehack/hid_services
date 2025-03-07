@@ -101,6 +101,7 @@ class Keyboard(HumanInterfaceDevice):
     # Overwrite super to save HID specific characteristics.
     def save_service_characteristics(self, handles):
         super(Keyboard, self).save_service_characteristics(handles)                                                     # Call super to write DIS and BAS characteristics.
+        print(handles)
 
         (h_info, h_hid, h_ctrl, self.h_rep, h_d1, self.h_repout, h_d2, h_proto) = handles[3]                            # Get the handles for the HIDS characteristics. These correspond directly to self.HIDS. Position 3 because of the order of self.services.
 

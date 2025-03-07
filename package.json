@@ -1,6 +1,7 @@
 {
     "urls": [
         ["hidservices/constants.py", "github:pruebadehack/hid_services/hidservices/constants.py"],
+        ["hidservices/generic.py", "github:pruebadehack/hid_services/hidservices/generic.py"],
         ["hidservices/joystick.py", "github:pruebadehack/hid_services/hidservices/joystick.py"],
         ["hidservices/keyboard.py", "github:pruebadehack/hid_services/hidservices/keyboard.py"],
         ["hidservices/mouse.py", "github:pruebadehack/hid_services/hidservices/mouse.py"],

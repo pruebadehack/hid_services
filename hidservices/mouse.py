@@ -82,7 +82,7 @@ class Mouse(HumanInterfaceDevice):
     # Overwrite super to save HID specific characteristics.
     def save_service_characteristics(self, handles):
         super(Mouse, self).save_service_characteristics(handles)                                                        # Call super to write DIS and BAS characteristics.
-
+        print(handles)
         (h_info, h_hid, h_ctrl, self.h_rep, h_d1, h_proto) = handles[3]                                                 # Get the handles for the HIDS characteristics. These correspond directly to self.HIDS. Position 3 because of the order of self.services.
 
         b = self.button1 + self.button2 * 2 + self.button3 * 4

@@ -57,12 +57,12 @@ class HumanInterfaceDevice(object):
         self.device_appearance = 960                                                                                    # The device appearance: 960 = Generic HID.
 
         # Device Information Service (DIS) characteristics.
-        self.model_number = "1"                                                                                         # The model number characteristic.
-        self.serial_number = "1"                                                                                        # The serial number characteristic.
-        self.firmware_revision = "1"                                                                                    # The firmware revision characteristic.
-        self.hardware_revision = "1"                                                                                    # The hardware revision characteristic.
-        self.software_revision = "2"                                                                                    # The software revision characteristic.
-        self.manufacture_name = "Homebrew"                                                                              # The manufacturer name characteristic.
+        self.model_number = "1234"                                                                                         # The model number characteristic.
+        self.serial_number = "4321"                                                                                        # The serial number characteristic.
+        self.firmware_revision = "1.0"                                                                                    # The firmware revision characteristic.
+        self.hardware_revision = "1.0"                                                                                    # The hardware revision characteristic.
+        self.software_revision = "1.0"                                                                                    # The software revision characteristic.
+        self.manufacture_name = "Rygom Solutions"                                                                              # The manufacturer name characteristic.
 
         # DIS plug and play (PnP) characteristics.
         self.pnp_manufacturer_source = 0x01                                                                             # The manufacturer source. 0x01 = Bluetooth uuid list.
@@ -304,6 +304,10 @@ class HumanInterfaceDevice(object):
         print("Writing service characteristics")
 
         for handle, (name, value) in self.characteristics.items():
+            print(f"{name}")
+            name_cleaned = ''.join([chr(x) if 32 <= x < 128 else '?' for x in name])            
+#            name_cleaned = name.decode('utf-8', errors='replace')
+            print(f"Name: {name_cleaned} | value: {value}")
             self._ble.gatts_write(handle, value)
 
     # Load bonding keys from json file.
